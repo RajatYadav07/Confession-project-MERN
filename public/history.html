@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My History — Anonymous Confession Wall</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --accent: #06b6d4;
+    --bg: #f8fafc;
+    --sidebar-bg: #0f172a;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+}
+
+/* Global Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top right, #e0e7ff, transparent),
+                radial-gradient(circle at bottom left, #f1f5f9, #f8fafc);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    padding: 40px 25px;
+    position: fixed;
+    background: var(--sidebar-bg);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.brand {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 40px;
+}
+
+.brand small {
+    color: var(--accent);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    font-weight: 500;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 14px;
+    padding: 14px 20px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    box-shadow: 0 8px 15px rgba(99, 102, 241, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn.outline {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    color: #fff;
+    box-shadow: none;
+}
+
+/* Main Content Area */
+.main {
+    margin-left: 260px;
+    padding: 60px 80px;
+    max-width: 1300px;
+}
+
+h1 {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 50px;
+}
+
+/* Profile Grid Layout */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 50px;
+    align-items: start;
+}
+
+/* Profile Card (Left Side) */
+.profile-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+    position: sticky;
+    top: 60px;
+}
+
+.avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 48px;
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+}
+
+.profile-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.profile-card .muted {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* Stats inside Profile Card */
+.stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.stat {
+    flex: 1;
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 18px;
+    border: 1px solid #f1f5f9;
+}
+
+.stat div:first-child {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.stat div:last-child {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+/* Tabs for Posts */
+.tabs {
+    display: flex;
+    gap: 30px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 30px;
+}
+
+.tab {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--muted);
+    background: none;
+    border: none;
+    padding: 12px 5px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    color: var(--primary);
+}
+
+.tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+/* Secret Posts List (Right Side) */
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post-row {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.4s ease;
+}
+
+.post-row:hover {
+    transform: translateX(10px);
+    background: #fff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    border-color: var(--primary);
+}
+
+.post-text { flex: 1; padding-right: 20px; }
+
+.post-text .title {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 400;
+}
+
+.post-text .time {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+/* Action Buttons */
+.post-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.post-actions button {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+    background: #eef2ff;
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-delete:hover {
+    background: #fff1f2;
+    color: #e11d48;
+    border-color: #fda4af;
+}
+
+/* Empty State */
+.empty-msg {
+    text-align: center;
+    padding: 60px;
+    color: var(--muted);
+    font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .profile-grid { grid-template-columns: 1fr; }
+    .profile-card { position: static; max-width: 400px; margin: 0 auto 40px; }
+    .main { padding: 40px; }
+}
+
+@media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 30px 20px; }
+    .post-row { flex-direction: column; align-items: flex-start; gap: 20px; }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <div class="brand">Campus<br><small>Safe Space</small></div>
+  <nav>
+    <a href="/home.html" class="nav-link">🏠 Home</a>
+    <a href="/" class="nav-link">📡 Campus Feed</a>
+    <a href="/history.html" class="nav-link" style="color:#fff; background: rgba(255,255,255,0.1);">📜 My History</a>
+
+    <button id="write-btn" class="btn">Write Secret</button>
+    <button id="logout-btn" class="btn outline" style="display:none;">Logout</button>
+  </nav>
+</aside>
+
+<main class="main">
+  <h1>My Personal Space</h1>
+
+  <section class="profile-grid">
+    <div class="profile-card">
+      <div id="avatar" class="avatar">👨‍🎓</div>
+      <h3 id="displayName">Anjaan Insaan</h3>
+      <div class="muted">My Secret Profile</div>
+
+      <div class="stats">
+        <div class="stat">
+          <div id="secret-count">0</div>
+          <div>SECRETS</div>
+        </div>
+        <div class="stat">
+          <div id="heart-count">0</div>
+          <div>REACTIONS</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="tabs">
+        <button class="tab active">My Posts</button>
+      </div>
+
+      <div id="posts-list" class="post-list">
+          <div class="empty-msg">No confessions yet. Start by writing one!</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="/history.js"></script>
+
+</body>
+</html>
